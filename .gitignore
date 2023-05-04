@@ -1,0 +1,7 @@
+Scripts/
+Lib/
+share/
+pyvenv.cfg
+__pycache__/
+
+.vscode
