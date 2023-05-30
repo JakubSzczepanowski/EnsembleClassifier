@@ -15,7 +15,6 @@ class EnsembleClassifier(BaseEstimator, ClassifierMixin):
 
     def fit(self, X: pd.DataFrame, y: np.array):
         n = len(X.index)
-        #przełącznik jeżeli używamy klasyfikatora SVM
         for _ in range(self._n_estimators):
             #bootstrapowe losowanie ze zwracaniem
             bootstrap_samples = np.random.randint(n, size=n)

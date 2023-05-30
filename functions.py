@@ -13,14 +13,18 @@ from sklearn.preprocessing import MinMaxScaler
 def plot_confusion_matrix(y_true, y_pred) -> None:
     cf_matrix = confusion_matrix(y_true, y_pred)
 
-    group_names = ['True Neg','False Pos','False Neg','True Pos']
+    unique_labels = np.unique(y_true)
+    shape = len(unique_labels)
+    group_names = np.array([])
+    for _ in range(shape):
+        group_names = np.append(group_names, unique_labels)    
     group_counts = ["{0:0.0f}".format(value) for value in cf_matrix.flatten()]
     group_percentages = ["{0:.2%}".format(value) for value in cf_matrix.flatten()/np.sum(cf_matrix)]
       
     labels = [f"{v1}\n{v2}\n{v3}" for v1, v2, v3 in
                 zip(group_names,group_counts,group_percentages)]
 
-    labels = np.asarray(labels).reshape(2,2)
+    labels = np.asarray(labels).reshape(shape,shape)
 
     plt.figure(figsize=(5,5))
     sns.heatmap(cf_matrix, annot=labels, fmt="")
@@ -59,7 +63,8 @@ def metrics(y_true, y_pred) -> dict:
     print(f"Accuracy: {metrics['accuracy']}\n Macro precision: {metrics['precision']}\n Macro recall: {metrics['recall']} \n Macro f1-score: {metrics['f1-score']}")
 
     plot_confusion_matrix(y_true, y_pred)
-    plot_roc_curve(y_true, y_pred)
+    if len(np.unique(y_true)) == 2:
+        plot_roc_curve(y_true, y_pred)
 
     return metrics
 
@@ -70,6 +75,14 @@ def get_scores(arr):
     max = arr.max()
 
     return (mean, std, min, max)
+
+def get_labeled_scores(arr, round_to=2):
+    mean = round(arr.mean(), round_to)
+    std = round(arr.std(), round_to)
+    min = round(arr.min(), round_to)
+    max = round(arr.max(), round_to)
+
+    return {'Średnia': mean, 'Odchylenie standardowe': std, 'Wartość minimalna': min, 'Wartość maksymalna': max}
 
 
 def k_fold(X: pd.DataFrame, y: np.array, model: Any, k: int = 3, k_fold_func: callable = KFold, random_state: int = 42):
