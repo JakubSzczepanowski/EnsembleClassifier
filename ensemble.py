@@ -11,7 +11,7 @@ class EnsembleClassifier(BaseEstimator, ClassifierMixin):
         self._estimators: list[BaseEstimator] = []
         self.base_estimator: BaseEstimator = base_estimator
         self.rand_features: bool = rand_features
-        self._feature_indexes: list[str] = []
+        self._feature_indexes: list = []
 
     def fit(self, X: pd.DataFrame, y: np.array):
         n = len(X.index)
