@@ -14,7 +14,8 @@ class EnsembleClassifier(BaseEstimator, ClassifierMixin):
         self._feature_indexes: list = []
 
     def fit(self, X: pd.DataFrame, y: np.array):
-        n = len(X.index)
+        X = X.reset_index(drop=True)
+        n = len(X)
         for _ in range(self._n_estimators):
             #bootstrapowe losowanie ze zwracaniem
             bootstrap_samples = np.random.randint(n, size=n)
